@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Products catalog: anyone can read active products (for touchscreen kiosk)
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // Orders: readable for the kiosk and signed-in operators
+    match /orders/{orderId} {
+      allow read, create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // Payments: readable and writable during kiosk payment flow
+    match /payments/{paymentId} {
+      allow read, create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // Machines & Telemetry: readable and writable
+    match /machines/{machineId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+
+      match /sensors/{sensorId} {
+        allow read, write: if true;
+      }
+    }
+  }
+}

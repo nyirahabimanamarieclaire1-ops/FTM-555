@@ -1,0 +1,117 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Beverage product available in the FTM vending cooler",
+      "type": "object",
+      "properties": {
+        "product_name": { "type": "string" },
+        "product_code": { "type": "string" },
+        "category_id": { "type": "string" },
+        "description": { "type": "string" },
+        "image_url": { "type": "string" },
+        "size": { "type": "string" },
+        "price": { "type": "number" },
+        "is_alcoholic": { "type": "boolean" },
+        "age_restricted": { "type": "boolean" },
+        "is_active": { "type": "boolean" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
+      },
+      "required": ["product_name", "product_code", "price", "is_alcoholic", "is_active"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Vending customer purchase order",
+      "type": "object",
+      "properties": {
+        "order_reference": { "type": "string" },
+        "customer_phone": { "type": "string" },
+        "machine_id": { "type": "string" },
+        "product_id": { "type": "string" },
+        "product_name": { "type": "string" },
+        "unit_price": { "type": "number" },
+        "quantity": { "type": "number" },
+        "total_amount": { "type": "number" },
+        "currency": { "type": "string" },
+        "order_status": { "type": "string" },
+        "payment_status": { "type": "string" },
+        "dispensing_status": { "type": "string" },
+        "payment_provider": { "type": "string" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" },
+        "completed_at": { "type": "string" }
+      },
+      "required": ["order_reference", "total_amount", "currency", "order_status", "payment_status", "dispensing_status"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Mobile money payment transaction record",
+      "type": "object",
+      "properties": {
+        "order_id": { "type": "string" },
+        "customer_phone": { "type": "string" },
+        "provider": { "type": "string" },
+        "amount": { "type": "number" },
+        "currency": { "type": "string" },
+        "provider_transaction_id": { "type": "string" },
+        "internal_transaction_reference": { "type": "string" },
+        "payment_status": { "type": "string" },
+        "request_created_at": { "type": "string" },
+        "payment_confirmed_at": { "type": "string" },
+        "failure_reason": { "type": "string" }
+      },
+      "required": ["order_id", "customer_phone", "provider", "amount", "payment_status"]
+    },
+    "Machine": {
+      "title": "Machine",
+      "description": "FTM-1 Smart Cooler hardware instance",
+      "type": "object",
+      "properties": {
+        "machine_name": { "type": "string" },
+        "machine_serial_number": { "type": "string" },
+        "location": { "type": "string" },
+        "device_status": { "type": "string" },
+        "firmware_version": { "type": "string" },
+        "last_online_at": { "type": "string" }
+      },
+      "required": ["machine_name", "machine_serial_number", "device_status"]
+    },
+    "MachineSensor": {
+      "title": "MachineSensor",
+      "description": "Sensor readings for FTM-1",
+      "type": "object",
+      "properties": {
+        "machine_id": { "type": "string" },
+        "sensor_type": { "type": "string" },
+        "sensor_value": { "type": "number" },
+        "unit": { "type": "string" },
+        "sensor_status": { "type": "string" },
+        "recorded_at": { "type": "string" }
+      },
+      "required": ["machine_id", "sensor_type", "sensor_value", "unit"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Beverage product catalog available in the vending machine"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Customer orders and status transitions"
+    },
+    "/payments/{paymentId}": {
+      "schema": "Payment",
+      "description": "Mobile money payment events and status"
+    },
+    "/machines/{machineId}": {
+      "schema": "Machine",
+      "description": "Physical vending cooler telemetry and status"
+    },
+    "/machines/{machineId}/sensors/{sensorId}": {
+      "schema": "MachineSensor",
+      "description": "Sensors and temperature readings"
+    }
+  }
+}
